@@ -12,29 +12,30 @@ app.get("/", (req, res) => {
 });
 
 app.get("/diary", async (req, res) => {
+  const now = Date.now();
+
+  if (now - lastCall < 1000) {
+    return res.status(429).json({ error: "Wait 1 second between requests" });
+  }
+
+  lastCall = now;
+
   const { from, to } = req.query;
 
-  try {
-    const r = await fetch(
-      `https://app.timetastic.co.uk/api/absences?start=${from}&end=${to}`,
-      
-      {
-        headers: {
-          Authorization: "Bearer " + API_KEY,
-          Accept: "application/json"
-        }
+  const r = await fetch(
+    `https://app.timetastic.co.uk/api/absences?start=${from}&end=${to}`,
+    {
+      headers: {
+        Authorization: "Bearer " + API_KEY,
+        Accept: "application/json"
       }
-    );
+    }
+  );
 
-    const text = await r.text();
-
-    // send back EXACT Timetastic response
-    res.status(r.status).send(text);
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  const text = await r.text();
+  res.status(r.status).send(text);
 });
 
 app.listen(process.env.PORT || 3000);
+
 
