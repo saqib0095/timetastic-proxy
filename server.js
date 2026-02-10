@@ -16,7 +16,8 @@ app.get("/diary", async (req, res) => {
 
   try {
     const r = await fetch(
-      `https://app.timetastic.co.uk/api/absences?from=${from}&to=${to}`,
+      `https://app.timetastic.co.uk/api/absences?start=${from}&end=${to}`,
+      
       {
         headers: {
           Authorization: "Bearer " + API_KEY,
@@ -36,3 +37,4 @@ app.get("/diary", async (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000);
+
