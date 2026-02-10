@@ -7,19 +7,34 @@ app.use(cors());
 
 const API_KEY = "5480ae6b-17c2-4064-ae03-50d061454610";
 
+app.get("/", (req, res) => {
+  res.send("Proxy running ✅");
+});
+
 app.get("/diary", async (req, res) => {
   const { from, to } = req.query;
 
   try {
     const r = await fetch(
       `https://app.timetastic.co.uk/api/absences?from=${from}&to=${to}`,
-      { headers: { Authorization: "Bearer " + API_KEY } }
+      {
+        headers: {
+          Authorization: "Bearer " + API_KEY,
+          Accept: "application/json"
+        }
+      }
     );
 
-    const data = await r.json();
-    res.json(data);
-  } catch {
-    res.status(500).json({ error: "failed" });
+    const text = await r.text();
+
+    console.log("Status:", r.status);
+    console.log("Response:", text);
+
+    res.status(r.status).send(text);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 });
 
