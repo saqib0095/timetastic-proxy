@@ -11,6 +11,8 @@ app.get("/", (req, res) => {
   res.send("Proxy running ✅");
 });
 
+let lastCall = 0;
+
 app.get("/diary", async (req, res) => {
   const now = Date.now();
 
@@ -37,5 +39,6 @@ app.get("/diary", async (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000);
+
 
 
