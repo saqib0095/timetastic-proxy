@@ -27,13 +27,10 @@ app.get("/diary", async (req, res) => {
 
     const text = await r.text();
 
-    console.log("Status:", r.status);
-    console.log("Response:", text);
-
+    // send back EXACT Timetastic response
     res.status(r.status).send(text);
 
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
